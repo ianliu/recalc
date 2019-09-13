@@ -1,0 +1,27 @@
+ident = @{ ASCII_ALPHA ~ (ASCII_ALPHANUMERIC | "_")* ~ "'"* }
+
+int = { ("+" | "-")? ~ ASCII_DIGIT+ }
+num = @{ int ~ ("." ~ ASCII_DIGIT*)? ~ (^"e" ~ int)? }
+
+operation = _{ add | subtract | multiply | divide | power }
+add       = { "+" }
+subtract  = { "-" }
+multiply  = { "*" }
+divide    = { "/" }
+power     = { "^" }
+
+e  = { "e" }
+pi = { "pi" }
+constants = _{ pi | e }
+
+function = { ident ~ "(" ~ expr ~ ")" }
+
+atom = _{ constants | function | ident | num | "(" ~ expr ~ ")" }
+expr = { atom ~ (operation ~ atom)* }
+assign = { ident ~ "=" ~ expr }
+
+stmt = _{ assign | expr }
+
+calculation = _{ SOI ~ stmt ~ EOI }
+
+WHITESPACE = _{ " " | "\t" }
